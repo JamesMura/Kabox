@@ -8,8 +8,8 @@
   - apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
   - apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
   - apt: pkg={{item}} state=latest update_cache=yes
-    with_items: [git, jenkins, wget]
-  - service: jenkins state=started
+    with_items: [git, jenkins, wget, lib32stdc++6, lib32z1, default-jdk]
+  - service: name=jenkins state=started
   - name: download android sdk
     get_url: url=http://dl.google.com/android/android-sdk_r24.0.2-linux.tgz dest=/opt/androidsdk.tar.gz
   - name: extract the sdk
@@ -19,7 +19,7 @@
       creates: /opt/android-sdk-linux
   - {template: 'src=templates/android-profile.j2 dest=/etc/profile.d/android.sh'}
   - name: update android sdk and install needed versions
-    shell: echo y | android update sdk --no-ui --all --filter 2,3,10,19,20,59,61,extra-android-support,platform-tools,android-19
+    shell: echo y | android update sdk --no-ui --all --filter 2,3,10,19,20,59,61,111,112,extra-android-support,platform-tools,android-19
     environment:
       ANDROID_HOME: /opt/android-sdk-linux
       PATH: /opt/android-sdk-linux/tools:/opt/android-sdk-linux/platform-tools:{{ ansible_env.PATH }}
